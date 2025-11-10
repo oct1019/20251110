@@ -20,6 +20,7 @@ if (typeof palettes === 'undefined') {
 // 限定為 10 個樣式（每個樣式包含 palette、drawLineCount、starPoints）
 let styles = [];
 let currentStyleIndex = 0;
+let labelColor;
 
 function buildStyles() {
 	// 如果 palettes 少於 10，會重複使用
@@ -38,6 +39,9 @@ function applyStyle(idx) {
 	paletteSelected = s.palette;
 	drawLineCount = s.drawLineCount;
 	starPoints = s.starPoints;
+	// 為中央文字選擇一個該樣式內的顏色
+	let c = random(paletteSelected);
+	labelColor = color(c);
 }
 
 function setup() {
@@ -60,6 +64,25 @@ function draw() {
 	stroke("#355070");
 	t += vel;
 	tile();
+
+	// 在畫面中央顯示學校名稱（35px），置中對齊，並加上半透明白色底框
+	push();
+	textSize(35);
+	textAlign(CENTER, CENTER);
+	// 計算文字尺寸以製作底框
+	let label = '淡江大學';
+	let tw = textWidth(label);
+	let th = textAscent() + textDescent();
+	let paddingX = 20;
+	let paddingY = 10;
+	// 半透明白底框（alpha 200/255）
+	noStroke();
+	fill(255, 200);
+	rect(width / 2, height / 2, tw + paddingX, th + paddingY, 6);
+	// 文字（使用當前樣式的隨機顏色）
+	fill(labelColor || '#000000');
+	text(label, width / 2, height / 2);
+	pop();
 }
 
 function randomCol() {
